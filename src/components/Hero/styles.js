@@ -14,86 +14,82 @@ export const Wrapper = styled.div`
 `;
 
 export const Banner = styled.div`
-  flex: 1;
   position: relative;
-
-  .doctor {
-    margin-right: -110px;
-    position: absolute;
-    bottom: 0;
-    right: 0;
-  }
-
-  .circle {
-    position: fixed;
-    bottom: -45vw;
-    width: 70vw;
-    right: -17vw;
-    z-index: 1;
-  }
+  flex: 1;
 `;
 
 export const Info = styled.div`
-  width: 650px;
-  margin-top: 100px;
-
-  h1 {
-    font-size: var(--super);
-
-    span {
-      color: var(--primary);
-    }
-  }
-
-  p {
-    color: var(--bright);
-    font-size: var(--medium);
-    margin: 26px 0;
-  }
-
-  button {
-    background-color: var(--primary);
-    color: var(--basic);
-    padding: 10px 35px;
-    border-radius: 10px;
-    font-size: var(--medium);
-
-    :hover {
-      opacity: 0.75;
-    }
-  }
-`;
-
-export const Modal = styled.div`
-  background-color: var(--background);
   box-shadow: var(--basicShadow);
-  border-radius: 15px;
-  position: absolute;
-  padding: 15px;
-  right: 40%;
-  bottom: 50px;
+  border-radius: 10px;
+  padding: 20px 40px;
+  width: 450px;
 
-  img {
-    border-radius: 50%;
+  .title {
+    h1 {
+      font-size: var(--super);
+    }
+
+    h2 {
+      font-size: var(--super);
+      color: var(--primary);
+      margin-top: -20px;
+    }
   }
 
   h4 {
+    color: var(--bright);
     font-size: var(--medium);
-    margin-top: 10px;
+    margin-bottom: 48px;
+    font-weight: 300;
+    width: 300px;
+  }
+`;
+
+export const Form = styled.form`
+  p {
+    color: var(--bright);
+    font-size: var(--medium);
+    margin: 24px 0 5px 0;
   }
 
-  p {
-    font-size: var(--small);
-    color: var(--bright);
+  span {
+    color: var(--primary);
+    font-size: var(--medium);
+    font-weight: 700;
+    margin: 15px;
+  }
+
+  input,
+  select {
+    padding: 10px;
+    margin-rigth: 10px;
+    width: 100px;
+    border-radius: 10px;
+    background-color: var(--skeleton);
+    border: 1px solid var(--skeleton);
+    transition: var(--fast);
+
+    :hover {
+      border: 1px solid var(--border);
+    }
+
+    :focus {
+      border: 1px solid var(--primary);
+    }
+  }
+
+  .instructions {
+    width: 100%;
   }
 
   button {
     background-color: var(--primary);
+    font-size: var(--medium);
     color: var(--basic);
-    padding: 10px 10px;
+    width: 100%;
+    padding: 10px 50px;
     border-radius: 10px;
-    font-size: var(--small);
-    margin-top: 10px;
+    margin-top: 25px;
 
     :hover {
       opacity: 0.75;

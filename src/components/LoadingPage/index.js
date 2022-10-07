@@ -11,9 +11,11 @@ const LoadingPage = () => {
         behavior: "smooth",
         top: 0,
       });
+
       setTimeout(() => {
         container.current.style.opacity = "0";
       }, 600);
+
       return setTimeout(() => {
         container.current.style.top = "-150%";
       }, 1000);
@@ -35,7 +37,7 @@ const LoadingPage = () => {
     >
       <div className="logo flex_cc">
         <h1>
-          Healhty<span>Carely</span>
+          Mars<span> Rover</span>
         </h1>
       </div>
       <div className="bar" />

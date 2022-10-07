@@ -1,38 +1,116 @@
-import Menu from "components/Hero/Menu";
-import { circle, doctor, doctor_min } from "imgs";
-import { Container, Wrapper, Banner, Info, Modal } from "./styles";
+import { useState } from "react";
+import { Banner, Container, Info, Wrapper, Form } from "./styles";
 
-const Hero = ({ scrollTo }) => {
+const Hero = () => {
+  const [plateauData, setPlateauData] = useState({ height: 10, width: 10 });
+  const [instructions, setInstructions] = useState("LMLMLMLMM");
+  const [initialPosition, setInitialPosition] = useState({
+    x: 1,
+    y: 2,
+    facing: "N",
+  });
+
+  const handleChange = (event) => {
+    const { value, name, id } = event.target;
+
+    if (name.includes("plateauData")) {
+      setPlateauData({ ...plateauData, [id]: value });
+    }
+
+    if (name.includes("initialPosition")) {
+      setInitialPosition({ ...initialPosition, [id]: value });
+    }
+
+    if (name.includes("instructions")) {
+      setInstructions(value.toUpperCase());
+    }
+
+    console.log(plateauData, initialPosition);
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+  };
+
+  // <Info name="info" data-aos="fade-up" data-aos-delay="2200">
+
   return (
     <Container name="container">
       <Wrapper name="wrapper">
-        <Menu name="menu" scrollTo={scrollTo} />
-        <Banner name="banner">
-          <Info name="info" data-aos="fade-up" data-aos-delay="2200">
-            <h1>
-              Medical Care Now Simplified For <span>Everyone</span>
-            </h1>
-            <p>
-              Health carely is a new way to get health insurance quotes. We
-              offer tools similar to those provided by insurance companies for
-              free and prices are based on donations and not restrictive health
-              plan networks.
-            </p>
-            <button>Contact Us</button>
+        <Banner name="banner" className="flex_cs">
+          <Info name="info">
+            <div className="title">
+              <h1>Mars Rover in</h1>
+              <h2>JavaScript</h2>
+            </div>
+            <h4>
+              Insert the plateau size, the rover starting position and the
+              instructions to the rover to start.
+            </h4>
+            <Form onSubmit={handleSubmit}>
+              <p>Plateau Size</p>
+              <input
+                min="1"
+                max="25"
+                id="height"
+                type="number"
+                name="plateauData"
+                value={plateauData.height}
+                onChange={handleChange}
+              />
+              <span>x</span>
+              <input
+                min="1"
+                max="25"
+                id="width"
+                type="number"
+                name="plateauData"
+                value={plateauData.width}
+                onChange={handleChange}
+              />
+              <p>Initial Position</p>
+              <input
+                id="y"
+                min="0"
+                type="number"
+                name="initialPosition"
+                max={plateauData.height}
+                value={initialPosition.y}
+                onChange={handleChange}
+              />
+              <span>,</span>
+              <input
+                id="x"
+                min="0"
+                type="number"
+                name="initialPosition"
+                max={plateauData.width}
+                value={initialPosition.x}
+                onChange={handleChange}
+              />
+              <span>,</span>
+              <select
+                id="facing"
+                name="initialPosition"
+                onChange={handleChange}
+                value={initialPosition.facing}
+              >
+                <option value="N">N</option>
+                <option value="E">E</option>
+                <option value="S">S</option>
+                <option value="W">W</option>
+              </select>
+              <p>Instructions</p>
+              <input
+                type="string"
+                name="instructions"
+                value={instructions}
+                className="instructions"
+                onChange={handleChange}
+              />
+              <button type="submit">Start</button>
+            </Form>
           </Info>
-          <img src={doctor} alt="doctor" className="doctor" />
-          <img src={circle} alt="circle" className="circle" />
-          <Modal
-            name="modal"
-            className="flex_ccc"
-            data-aos="fade-up"
-            data-aos-delay="2200"
-          >
-            <img src={doctor_min} alt="doctor2" />
-            <h4>Dr. Shimanta</h4>
-            <p>Skin Specialist</p>
-            <button>Make Schedule</button>
-          </Modal>
         </Banner>
       </Wrapper>
     </Container>
