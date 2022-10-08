@@ -1,13 +1,14 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Banner, Container, Info, Wrapper, Form, Plateau } from "./styles";
 
 const Hero = () => {
   const [plateauData, setPlateauData] = useState({ height: 10, width: 10 });
   const [instructions, setInstructions] = useState("LMLMLMLMM");
-  const [initialPosition, setInitialPosition] = useState({
+  const [position, setPosition] = useState({
+    facing: "N",
+    rotation: -90,
     x: 1,
     y: 2,
-    facing: "N",
   });
 
   const handleChange = (event) => {
@@ -18,18 +19,114 @@ const Hero = () => {
     }
 
     if (name.includes("initialPosition")) {
-      setInitialPosition({ ...initialPosition, [id]: value });
+      setPosition({ ...position, [id]: value });
     }
 
     if (name.includes("instructions")) {
       setInstructions(value.toUpperCase());
     }
 
-    console.log(plateauData, initialPosition);
+    console.log(plateauData, position);
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const array = Array.from(instructions);
+
+    for (let i = 0; i < array.length; i += 1) {
+      setTimeout(() => {
+        followInstructions(array[i]);
+      }, i * 1050);
+    }
+  };
+
+  const followInstructions = (letter) => {
+    switch (letter) {
+      case "L":
+        changeDirection("L");
+        break;
+
+      case "R":
+        changeDirection("R");
+
+        return;
+
+      case "M":
+        moveRover();
+        return;
+    }
+  };
+
+  useEffect(() => {
+    console.log(position);
+  }, [position]);
+
+  const changeDirection = (spinWay) => {
+    switch (position.facing) {
+      case "N":
+        setPosition({
+          ...position,
+          rotation: spinWay === "L" ? -180 : 0,
+          facing: spinWay === "L" ? "W" : "E",
+        });
+        break;
+
+      case "E":
+        setPosition({
+          ...position,
+          rotation: spinWay === "L" ? -90 : 90,
+          facing: spinWay === "L" ? "N" : "S",
+        });
+        break;
+
+      case "S":
+        setPosition({
+          ...position,
+          rotation: spinWay === "L" ? 0 : -180,
+          facing: spinWay === "L" ? "E" : "W",
+        });
+        break;
+
+      case "W":
+        setPosition({
+          ...position,
+          rotation: spinWay === "L" ? 90 : -90,
+          facing: spinWay === "L" ? "S" : "N",
+        });
+        break;
+    }
+  };
+
+  const moveRover = () => {
+    switch (position.facing) {
+      case "N":
+        setPosition({
+          ...position,
+          y: position.y + 1,
+        });
+        break;
+
+      case "E":
+        setPosition({
+          ...position,
+          x: position.x + 1,
+        });
+        break;
+
+      case "S":
+        setPosition({
+          ...position,
+          y: position.y - 1,
+        });
+        break;
+
+      case "W":
+        setPosition({
+          ...position,
+          x: position.x - 1,
+        });
+        break;
+    }
   };
 
   // <Info name="info" data-aos="fade-up" data-aos-delay="2200">
@@ -75,7 +172,7 @@ const Hero = () => {
                 type="number"
                 name="initialPosition"
                 max={plateauData.height}
-                value={initialPosition.y}
+                value={position.y}
                 onChange={handleChange}
               />
               <span>,</span>
@@ -85,7 +182,7 @@ const Hero = () => {
                 type="number"
                 name="initialPosition"
                 max={plateauData.width}
-                value={initialPosition.x}
+                value={position.x}
                 onChange={handleChange}
               />
               <span>,</span>
@@ -93,7 +190,7 @@ const Hero = () => {
                 id="facing"
                 name="initialPosition"
                 onChange={handleChange}
-                value={initialPosition.facing}
+                value={position.facing}
               >
                 <option value="N">N</option>
                 <option value="E">E</option>
@@ -113,8 +210,9 @@ const Hero = () => {
           </Info>
           <Plateau
             columns={plateauData.width}
-            y={initialPosition.y}
-            x={initialPosition.x}
+            direction={position.rotation}
+            y={position.y}
+            x={position.x}
           >
             <div className="grid">
               {Array(plateauData.height * plateauData.width)

@@ -119,15 +119,15 @@ export const Plateau = styled.div`
     }
 
     img {
-      width: 32px;
-      height: 32px;
-      position: absolute;
-      border-radiusd: 55px;
-      z-index: 10;
-      transition: 0.3s ease;
-      transform: rotate(90deg);
+      transform: rotate(${(props) => props.direction}deg);
       bottom: ${(props) => props.y * 32}px;
       left: ${(props) => props.x * 32}px;
+      transition: 0.3s ease;
+      border-radius: 55px;
+      position: absolute;
+      height: 32px;
+      width: 32px;
+      z-index: 10;
     }
   }
 `;
