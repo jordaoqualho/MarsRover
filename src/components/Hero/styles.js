@@ -26,20 +26,20 @@ export const Info = styled.div`
 
   .title {
     h1 {
-      font-size: var(--super);
+      font-size: var(--huge);
     }
 
     h2 {
-      font-size: var(--super);
+      font-size: var(--huge);
       color: var(--primary);
-      margin-top: -20px;
+      margin-top: -15px;
     }
   }
 
   h4 {
     color: var(--bright);
-    font-size: var(--medium);
-    margin-bottom: 48px;
+    font-size: var(--small);
+    margin-bottom: 32px;
     font-weight: 300;
     width: 300px;
   }
@@ -93,6 +93,41 @@ export const Form = styled.form`
 
     :hover {
       opacity: 0.75;
+    }
+  }
+`;
+
+export const Plateau = styled.div`
+  box-shadow: var(--basicShadow);
+  border-radius: 10px;
+  position: relative;
+  margin-left: 10px;
+  padding: 20px;
+
+  .grid {
+    grid-template-columns: repeat(${(props) => props.columns}, auto);
+    border-radius: 10px;
+    position: relative;
+    display: grid;
+    height: 100%;
+    width: 100%;
+
+    .block {
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      padding: 15px;
+    }
+
+    img {
+      width: 32px;
+      height: 32px;
+      position: absolute;
+      border-radiusd: 55px;
+      z-index: 10;
+      transition: 0.3s ease;
+      transform: rotate(90deg);
+      bottom: ${(props) => props.y * 32}px;
+      left: ${(props) => props.x * 32}px;
     }
   }
 `;

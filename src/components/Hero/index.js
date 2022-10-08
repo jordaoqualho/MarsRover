@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Banner, Container, Info, Wrapper, Form } from "./styles";
+import { Banner, Container, Info, Wrapper, Form, Plateau } from "./styles";
 
 const Hero = () => {
   const [plateauData, setPlateauData] = useState({ height: 10, width: 10 });
@@ -111,6 +111,24 @@ const Hero = () => {
               <button type="submit">Start</button>
             </Form>
           </Info>
+          <Plateau
+            columns={plateauData.width}
+            y={initialPosition.y}
+            x={initialPosition.x}
+          >
+            <div className="grid">
+              {Array(plateauData.height * plateauData.width)
+                .fill(plateauData.height * plateauData.width)
+                .map((row, i) => {
+                  return <div className="block" key={i} />;
+                })}
+              <img
+                src="https://i.imgur.com/oZggVmT.gif"
+                alt="img"
+                width="320"
+              />
+            </div>
+          </Plateau>
         </Banner>
       </Wrapper>
     </Container>
