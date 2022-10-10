@@ -122,7 +122,7 @@ export const Plateau = styled.div`
       transform: rotate(${(props) => props.direction}deg);
       bottom: ${(props) => props.y * 32}px;
       left: ${(props) => props.x * 32}px;
-      transition: 0.3s ease;
+      transition: 1s ease;
       border-radius: 55px;
       position: absolute;
       height: 32px;

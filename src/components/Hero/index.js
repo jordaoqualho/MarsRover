@@ -1,14 +1,15 @@
-import { useEffect, useState } from "react";
+import { getListOfActions, getRoverRotation } from "lib/rover";
+import { useState } from "react";
 import { Banner, Container, Info, Wrapper, Form, Plateau } from "./styles";
 
 const Hero = () => {
   const [plateauData, setPlateauData] = useState({ height: 10, width: 10 });
-  const [instructions, setInstructions] = useState("LMLMLMLMM");
+  const [instructions, setInstructions] = useState("MRRMMRMRRM");
   const [position, setPosition] = useState({
-    facing: "N",
-    rotation: -90,
-    x: 1,
-    y: 2,
+    facing: "E",
+    rotation: 0,
+    x: 3,
+    y: 3,
   });
 
   const handleChange = (event) => {
@@ -18,115 +19,31 @@ const Hero = () => {
       setPlateauData({ ...plateauData, [id]: value });
     }
 
-    if (name.includes("initialPosition")) {
-      setPosition({ ...position, [id]: value });
+    if (name.includes("roverPosition")) {
+      setPosition({ ...position, [id]: parseInt(value) });
+    }
+
+    if (name.includes("roverDirection")) {
+      setPosition({
+        ...position,
+        [id]: value,
+        rotation: getRoverRotation(value),
+      });
     }
 
     if (name.includes("instructions")) {
       setInstructions(value.toUpperCase());
     }
-
-    console.log(plateauData, position);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const array = Array.from(instructions);
-
-    for (let i = 0; i < array.length; i += 1) {
+    const listOfActions = getListOfActions(instructions, position);
+    listOfActions.forEach((action, order) => {
       setTimeout(() => {
-        followInstructions(array[i]);
-      }, i * 1050);
-    }
-  };
-
-  const followInstructions = (letter) => {
-    switch (letter) {
-      case "L":
-        changeDirection("L");
-        break;
-
-      case "R":
-        changeDirection("R");
-
-        return;
-
-      case "M":
-        moveRover();
-        return;
-    }
-  };
-
-  useEffect(() => {
-    console.log(position);
-  }, [position]);
-
-  const changeDirection = (spinWay) => {
-    switch (position.facing) {
-      case "N":
-        setPosition({
-          ...position,
-          rotation: spinWay === "L" ? -180 : 0,
-          facing: spinWay === "L" ? "W" : "E",
-        });
-        break;
-
-      case "E":
-        setPosition({
-          ...position,
-          rotation: spinWay === "L" ? -90 : 90,
-          facing: spinWay === "L" ? "N" : "S",
-        });
-        break;
-
-      case "S":
-        setPosition({
-          ...position,
-          rotation: spinWay === "L" ? 0 : -180,
-          facing: spinWay === "L" ? "E" : "W",
-        });
-        break;
-
-      case "W":
-        setPosition({
-          ...position,
-          rotation: spinWay === "L" ? 90 : -90,
-          facing: spinWay === "L" ? "S" : "N",
-        });
-        break;
-    }
-  };
-
-  const moveRover = () => {
-    switch (position.facing) {
-      case "N":
-        setPosition({
-          ...position,
-          y: position.y + 1,
-        });
-        break;
-
-      case "E":
-        setPosition({
-          ...position,
-          x: position.x + 1,
-        });
-        break;
-
-      case "S":
-        setPosition({
-          ...position,
-          y: position.y - 1,
-        });
-        break;
-
-      case "W":
-        setPosition({
-          ...position,
-          x: position.x - 1,
-        });
-        break;
-    }
+        setPosition({ ...action });
+      }, order * 1000);
+    });
   };
 
   // <Info name="info" data-aos="fade-up" data-aos-delay="2200">
@@ -149,46 +66,47 @@ const Hero = () => {
               <input
                 min="1"
                 max="25"
-                id="height"
-                type="number"
-                name="plateauData"
-                value={plateauData.height}
-                onChange={handleChange}
-              />
-              <span>x</span>
-              <input
-                min="1"
-                max="25"
                 id="width"
                 type="number"
                 name="plateauData"
                 value={plateauData.width}
                 onChange={handleChange}
               />
-              <p>Initial Position</p>
+              <span>x</span>
               <input
-                id="y"
-                min="0"
+                min="1"
+                max="25"
+                id="height"
                 type="number"
-                name="initialPosition"
-                max={plateauData.height}
-                value={position.y}
+                name="plateauData"
+                value={plateauData.height}
                 onChange={handleChange}
               />
-              <span>,</span>
+              <p>Rover Position</p>
               <input
                 id="x"
                 min="0"
                 type="number"
-                name="initialPosition"
+                name="roverPosition"
                 max={plateauData.width}
                 value={position.x}
                 onChange={handleChange}
               />
               <span>,</span>
+              <input
+                id="y"
+                min="0"
+                type="number"
+                name="roverPosition"
+                max={plateauData.height}
+                value={position.y}
+                onChange={handleChange}
+              />
+
+              <span>,</span>
               <select
                 id="facing"
-                name="initialPosition"
+                name="roverDirection"
                 onChange={handleChange}
                 value={position.facing}
               >
