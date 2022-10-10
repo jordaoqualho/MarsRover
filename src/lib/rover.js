@@ -1,13 +1,18 @@
-export const getListOfActions = (instructions, position) => {
+export const animateRover = (instructions, position, setPosition) => {
   const listOfInstructions = Array.from(instructions);
   var muteablePosition = position;
-  const actions = [];
+  const listOfActions = [];
+
   listOfInstructions.forEach((letter) => {
     const res = decideWay(letter, muteablePosition);
-    actions.push({ ...position, ...res });
+    listOfActions.push({ ...position, ...res });
   });
 
-  return actions;
+  listOfActions.forEach((action, order) => {
+    setTimeout(() => {
+      setPosition({ ...action });
+    }, order * 1000);
+  });
 };
 
 const decideWay = (letter, position) => {

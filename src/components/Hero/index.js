@@ -1,6 +1,7 @@
-import { getListOfActions, getRoverRotation } from "lib/rover";
+import popUp from "lib/popUp";
+import { animateRover, getRoverRotation } from "lib/rover";
 import { useState } from "react";
-import { Banner, Container, Info, Wrapper, Form, Plateau } from "./styles";
+import { Banner, Container, Form, Info, Plateau, Wrapper } from "./styles";
 
 const Hero = () => {
   const [plateauData, setPlateauData] = useState({ height: 10, width: 10 });
@@ -21,6 +22,18 @@ const Hero = () => {
 
     if (name.includes("roverPosition")) {
       setPosition({ ...position, [id]: parseInt(value) });
+      if (id === "y" && parseInt(value) > plateauData.height) {
+        setTimeout(() => {
+          setPosition({ ...position, y: plateauData.height - 1 });
+          popUp("Rover position must be inside plateau", true);
+        }, 500);
+      }
+      if (id === "x" && parseInt(value) > plateauData.width) {
+        setTimeout(() => {
+          setPosition({ ...position, x: plateauData.width - 1 });
+          popUp("Rover position must be inside plateau", true);
+        }, 500);
+      }
     }
 
     if (name.includes("roverDirection")) {
@@ -32,18 +45,14 @@ const Hero = () => {
     }
 
     if (name.includes("instructions")) {
-      setInstructions(value.toUpperCase());
+      const filterValue = value.toUpperCase().replace(/[^LRM\s]/g, "");
+      setInstructions(filterValue);
     }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const listOfActions = getListOfActions(instructions, position);
-    listOfActions.forEach((action, order) => {
-      setTimeout(() => {
-        setPosition({ ...action });
-      }, order * 1000);
-    });
+    animateRover(instructions, position, setPosition);
   };
 
   // <Info name="info" data-aos="fade-up" data-aos-delay="2200">
@@ -115,7 +124,7 @@ const Hero = () => {
                 <option value="S">S</option>
                 <option value="W">W</option>
               </select>
-              <p>Instructions</p>
+              <p>Instructions (L, R or M)</p>
               <input
                 type="string"
                 name="instructions"
@@ -138,11 +147,7 @@ const Hero = () => {
                 .map((row, i) => {
                   return <div className="block" key={i} />;
                 })}
-              <img
-                src="https://i.imgur.com/oZggVmT.gif"
-                alt="img"
-                width="320"
-              />
+              <img src="https://i.imgur.com/oZggVmT.gif" alt="img" />
             </div>
           </Plateau>
         </Banner>
