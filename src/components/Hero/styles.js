@@ -21,6 +21,7 @@ export const Banner = styled.div`
 export const Info = styled.div`
   box-shadow: var(--basicShadow);
   border-radius: 10px;
+  position: relative;
   padding: 20px 40px;
   width: 450px;
 
@@ -42,6 +43,21 @@ export const Info = styled.div`
     margin-bottom: 32px;
     font-weight: 300;
     width: 300px;
+  }
+
+  .refresh {
+    color: var(--background);
+    background-color: var(--error);
+    transition: all 0.3s;
+    border-radius: 50px;
+    padding: 2px 15px 4px 15px;
+    position: absolute;
+    right: 20px;
+    top: 20px;
+
+    :hover {
+      background-color: var(--border);
+    }
   }
 `;
 

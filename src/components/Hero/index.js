@@ -3,42 +3,53 @@ import { animateRover, getRoverRotation } from "lib/rover";
 import { useState } from "react";
 import { Banner, Container, Form, Info, Plateau, Wrapper } from "./styles";
 
+const initialState = {
+  roverData: { facing: "E", rotation: 0, x: 3, y: 3 },
+  plateauData: { height: 10, width: 10 },
+  instructions: "MRRMMRMRRM",
+  isAnimating: false,
+};
+
 const Hero = () => {
-  const [plateauData, setPlateauData] = useState({ height: 10, width: 10 });
-  const [instructions, setInstructions] = useState("MRRMMRMRRM");
-  const [position, setPosition] = useState({
-    facing: "E",
-    rotation: 0,
-    x: 3,
-    y: 3,
-  });
+  const [plateauData, setPlateauData] = useState(initialState.plateauData);
+  const [instructions, setInstructions] = useState(initialState.instructions);
+  const [isAnimating, setIsAnimating] = useState(initialState.isAnimating);
+  const [roverData, setRoverData] = useState(initialState.roverData);
 
   const handleChange = (event) => {
     const { value, name, id } = event.target;
 
+    if (isAnimating) return;
+
     if (name.includes("plateauData")) {
       setPlateauData({ ...plateauData, [id]: value });
+      if (id === "width" && value <= roverData.x) {
+        setRoverData({ ...roverData, x: plateauData.width - 2 });
+      }
+      if (id === "height" && value <= roverData.y) {
+        setRoverData({ ...roverData, y: plateauData.height - 2 });
+      }
     }
 
     if (name.includes("roverPosition")) {
-      setPosition({ ...position, [id]: parseInt(value) });
+      setRoverData({ ...roverData, [id]: parseInt(value) });
       if (id === "y" && parseInt(value) > plateauData.height) {
         setTimeout(() => {
-          setPosition({ ...position, y: plateauData.height - 1 });
+          setRoverData({ ...roverData, y: plateauData.height - 1 });
           popUp("Rover position must be inside plateau", true);
         }, 500);
       }
       if (id === "x" && parseInt(value) > plateauData.width) {
         setTimeout(() => {
-          setPosition({ ...position, x: plateauData.width - 1 });
+          setRoverData({ ...roverData, x: plateauData.width - 1 });
           popUp("Rover position must be inside plateau", true);
         }, 500);
       }
     }
 
     if (name.includes("roverDirection")) {
-      setPosition({
-        ...position,
+      setRoverData({
+        ...roverData,
         [id]: value,
         rotation: getRoverRotation(value),
       });
@@ -50,9 +61,24 @@ const Hero = () => {
     }
   };
 
+  const resetStates = () => {
+    if (isAnimating) return;
+    setPlateauData(initialState.plateauData);
+    setInstructions(initialState.instructions);
+    setIsAnimating(initialState.isAnimating);
+    setRoverData(initialState.roverData);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    animateRover(instructions, position, setPosition);
+    if (isAnimating) return;
+    animateRover(
+      instructions,
+      roverData,
+      plateauData,
+      setRoverData,
+      setIsAnimating
+    );
   };
 
   // <Info name="info" data-aos="fade-up" data-aos-delay="2200">
@@ -70,6 +96,17 @@ const Hero = () => {
               Insert the plateau size, the rover starting position and the
               instructions to the rover to start.
             </h4>
+            <button
+              type="button"
+              className="refresh"
+              onClick={() => resetStates()}
+              style={{
+                opacity: isAnimating ? 0.5 : 1,
+                cursor: isAnimating ? "not-allowed" : "pointer",
+              }}
+            >
+              reset
+            </button>
             <Form onSubmit={handleSubmit}>
               <p>Plateau Size</p>
               <input
@@ -97,8 +134,8 @@ const Hero = () => {
                 min="0"
                 type="number"
                 name="roverPosition"
-                max={plateauData.width}
-                value={position.x}
+                max={plateauData.width - 1}
+                value={roverData.x}
                 onChange={handleChange}
               />
               <span>,</span>
@@ -107,8 +144,8 @@ const Hero = () => {
                 min="0"
                 type="number"
                 name="roverPosition"
-                max={plateauData.height}
-                value={position.y}
+                max={plateauData.height - 1}
+                value={roverData.y}
                 onChange={handleChange}
               />
 
@@ -117,7 +154,7 @@ const Hero = () => {
                 id="facing"
                 name="roverDirection"
                 onChange={handleChange}
-                value={position.facing}
+                value={roverData.facing}
               >
                 <option value="N">N</option>
                 <option value="E">E</option>
@@ -132,14 +169,22 @@ const Hero = () => {
                 className="instructions"
                 onChange={handleChange}
               />
-              <button type="submit">Start</button>
+              <button
+                type="submit"
+                style={{
+                  opacity: isAnimating ? 0.5 : 1,
+                  cursor: isAnimating ? "not-allowed" : "pointer",
+                }}
+              >
+                Start
+              </button>
             </Form>
           </Info>
           <Plateau
             columns={plateauData.width}
-            direction={position.rotation}
-            y={position.y}
-            x={position.x}
+            direction={roverData.rotation}
+            y={roverData.y}
+            x={roverData.x}
           >
             <div className="grid">
               {Array(plateauData.height * plateauData.width)

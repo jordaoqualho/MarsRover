@@ -1,21 +1,33 @@
-export const animateRover = (instructions, position, setPosition) => {
+export const animateRover = (
+  instructions,
+  rover,
+  plateauData,
+  setPosition,
+  setIsAnimating
+) => {
   const listOfInstructions = Array.from(instructions);
-  var muteablePosition = position;
+  setIsAnimating(true);
+  var muteablePosition = rover;
   const listOfActions = [];
 
   listOfInstructions.forEach((letter) => {
-    const res = decideWay(letter, muteablePosition);
-    listOfActions.push({ ...position, ...res });
+    const res = decideWay(letter, muteablePosition, plateauData);
+    res && listOfActions.push({ ...rover, ...res });
   });
+  console.log(listOfActions);
 
   listOfActions.forEach((action, order) => {
     setTimeout(() => {
       setPosition({ ...action });
-    }, order * 1000);
+    }, order * 850);
   });
+
+  setTimeout(() => {
+    setIsAnimating(false);
+  }, listOfActions.length * 850);
 };
 
-const decideWay = (letter, position) => {
+const decideWay = (letter, position, plateauData) => {
   switch (letter) {
     case "L":
       return changeDirection("L", position);
@@ -24,7 +36,7 @@ const decideWay = (letter, position) => {
       return changeDirection("R", position);
 
     case "M":
-      return moveRover(position);
+      return moveRover(position, plateauData);
   }
 };
 
@@ -60,23 +72,32 @@ const changeDirection = (spinWay, position) => {
   };
 };
 
-const moveRover = (position) => {
-  switch (position.facing) {
+const moveRover = (rover, plateauData) => {
+  switch (rover.facing) {
     case "N":
-      position.y += 1;
-      return { y: position.y };
+      if (rover.y === plateauData.height - 1) return;
+
+      rover.y += 1;
+      return { y: rover.y };
 
     case "E":
-      position.x += 1;
-      return { x: position.x };
+      console.log(rover.x, plateauData.width);
+      if (rover.x === plateauData.width - 1) return;
+
+      rover.x += 1;
+      return { x: rover.x };
 
     case "S":
-      position.y -= 1;
-      return { y: position.y };
+      if (rover.y === 0) return;
+
+      rover.y -= 1;
+      return { y: rover.y };
 
     case "W":
-      position.x -= 1;
-      return { x: position.x };
+      if (rover.x === 0) return;
+
+      rover.x -= 1;
+      return { x: rover.x };
   }
 };
 
