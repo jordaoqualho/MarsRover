@@ -1,5 +1,5 @@
 {
-  "name": "react-landing-template",
+  "name": "mars-rover",
   "version": "1.0.0",
   "dependencies": {
     "aos": "^2.3.4",
