@@ -54,10 +54,6 @@ export const Info = styled.div`
     position: absolute;
     right: 20px;
     top: 20px;
-
-    :hover {
-      background-color: var(--border);
-    }
   }
 `;
 

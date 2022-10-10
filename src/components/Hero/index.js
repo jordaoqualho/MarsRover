@@ -16,10 +16,9 @@ const Hero = () => {
   const [isAnimating, setIsAnimating] = useState(initialState.isAnimating);
   const [roverData, setRoverData] = useState(initialState.roverData);
 
-  const handleChange = (event) => {
+  const handleInputChange = (event) => {
+    if (isAnimating == true) return;
     const { value, name, id } = event.target;
-
-    if (isAnimating) return;
 
     if (name.includes("plateauData")) {
       setPlateauData({ ...plateauData, [id]: value });
@@ -62,16 +61,17 @@ const Hero = () => {
   };
 
   const resetStates = () => {
-    if (isAnimating) return;
+    if (isAnimating === true) return;
     setPlateauData(initialState.plateauData);
     setInstructions(initialState.instructions);
     setIsAnimating(initialState.isAnimating);
-    setRoverData(initialState.roverData);
+    setRoverData({ ...initialState.roverData });
   };
 
   const handleSubmit = (e) => {
+    if (isAnimating === true) return;
     e.preventDefault();
-    if (isAnimating) return;
+
     animateRover(
       instructions,
       roverData,
@@ -81,12 +81,15 @@ const Hero = () => {
     );
   };
 
-  // <Info name="info" data-aos="fade-up" data-aos-delay="2200">
-
   return (
     <Container name="container">
       <Wrapper name="wrapper">
-        <Banner name="banner" className="flex_cs">
+        <Banner
+          name="banner"
+          className="flex_cs"
+          data-aos="fade-up"
+          data-aos-delay="2200"
+        >
           <Info name="info">
             <div className="title">
               <h1>Mars Rover in</h1>
@@ -116,7 +119,7 @@ const Hero = () => {
                 type="number"
                 name="plateauData"
                 value={plateauData.width}
-                onChange={handleChange}
+                onChange={handleInputChange}
               />
               <span>x</span>
               <input
@@ -126,7 +129,7 @@ const Hero = () => {
                 type="number"
                 name="plateauData"
                 value={plateauData.height}
-                onChange={handleChange}
+                onChange={handleInputChange}
               />
               <p>Rover Position</p>
               <input
@@ -136,7 +139,7 @@ const Hero = () => {
                 name="roverPosition"
                 max={plateauData.width - 1}
                 value={roverData.x}
-                onChange={handleChange}
+                onChange={handleInputChange}
               />
               <span>,</span>
               <input
@@ -146,14 +149,14 @@ const Hero = () => {
                 name="roverPosition"
                 max={plateauData.height - 1}
                 value={roverData.y}
-                onChange={handleChange}
+                onChange={handleInputChange}
               />
 
               <span>,</span>
               <select
                 id="facing"
                 name="roverDirection"
-                onChange={handleChange}
+                onChange={handleInputChange}
                 value={roverData.facing}
               >
                 <option value="N">N</option>
@@ -167,7 +170,7 @@ const Hero = () => {
                 name="instructions"
                 value={instructions}
                 className="instructions"
-                onChange={handleChange}
+                onChange={handleInputChange}
               />
               <button
                 type="submit"

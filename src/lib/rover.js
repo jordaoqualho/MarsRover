@@ -1,25 +1,28 @@
 export const animateRover = (
   instructions,
-  rover,
+  roverData,
   plateauData,
-  setPosition,
+  setRoverData,
   setIsAnimating
 ) => {
   const listOfInstructions = Array.from(instructions);
-  setIsAnimating(true);
-  var muteablePosition = rover;
-  const listOfActions = [];
+  const listOfActions = new Array();
+  var mutableRover = roverData;
 
   listOfInstructions.forEach((letter) => {
-    const res = decideWay(letter, muteablePosition, plateauData);
-    res && listOfActions.push({ ...rover, ...res });
+    const newAction = getActionFromInstruction(
+      letter,
+      mutableRover,
+      plateauData
+    );
+    newAction && listOfActions.push({ ...roverData, ...newAction });
   });
-  console.log(listOfActions);
 
-  listOfActions.forEach((action, order) => {
+  listOfActions.length > 0 && setIsAnimating(true);
+  listOfActions.forEach((newRoverData, index) => {
     setTimeout(() => {
-      setPosition({ ...action });
-    }, order * 850);
+      setRoverData({ ...newRoverData });
+    }, index * 850);
   });
 
   setTimeout(() => {
@@ -27,74 +30,87 @@ export const animateRover = (
   }, listOfActions.length * 850);
 };
 
-const decideWay = (letter, position, plateauData) => {
+const getActionFromInstruction = (letter, roverData, plateauData) => {
   switch (letter) {
     case "L":
-      return changeDirection("L", position);
+      return rotateRover("L", roverData);
 
     case "R":
-      return changeDirection("R", position);
+      return rotateRover("R", roverData);
 
     case "M":
-      return moveRover(position, plateauData);
+      return moveRover(roverData, plateauData);
   }
 };
 
-const changeDirection = (spinWay, position) => {
-  switch (position.facing) {
+const rotateRover = (spinDirection, roverData) => {
+  switch (roverData.facing) {
     case "N":
-      position.facing = spinWay === "L" ? "W" : "E";
-      position.rotation =
-        spinWay === "L" ? position.rotation - 90 : position.rotation + 90;
+      roverData.facing = spinDirection === "L" ? "W" : "E";
+      roverData.rotation =
+        spinDirection === "L"
+          ? roverData.rotation - 90
+          : roverData.rotation + 90;
       break;
 
     case "E":
-      position.facing = spinWay === "L" ? "N" : "S";
-      position.rotation =
-        spinWay === "L" ? position.rotation - 90 : position.rotation + 90;
+      roverData.facing = spinDirection === "L" ? "N" : "S";
+      roverData.rotation =
+        spinDirection === "L"
+          ? roverData.rotation - 90
+          : roverData.rotation + 90;
       break;
 
     case "S":
-      position.facing = spinWay === "L" ? "E" : "W";
-      position.rotation =
-        spinWay === "L" ? position.rotation - 90 : position.rotation + 90;
+      roverData.facing = spinDirection === "L" ? "E" : "W";
+      roverData.rotation =
+        spinDirection === "L"
+          ? roverData.rotation - 90
+          : roverData.rotation + 90;
       break;
 
     case "W":
-      position.facing = spinWay === "L" ? "S" : "N";
-      position.rotation =
-        spinWay === "L" ? position.rotation - 90 : position.rotation + 90;
+      roverData.facing = spinDirection === "L" ? "S" : "N";
+      roverData.rotation =
+        spinDirection === "L"
+          ? roverData.rotation - 90
+          : roverData.rotation + 90;
       break;
   }
+
   return {
-    rotation: position.rotation,
-    facing: position.facing,
+    rotation: roverData.rotation,
+    facing: roverData.facing,
   };
 };
 
 const moveRover = (rover, plateauData) => {
+  const topLimit = rover.y === plateauData.height - 1;
+  const rightLimit = rover.x === plateauData.width - 1;
+  const leftLimit = rover.x === 0;
+  const bottomLimit = rover.y === 0;
+
   switch (rover.facing) {
     case "N":
-      if (rover.y === plateauData.height - 1) return;
+      if (topLimit) return;
 
       rover.y += 1;
       return { y: rover.y };
 
     case "E":
-      console.log(rover.x, plateauData.width);
-      if (rover.x === plateauData.width - 1) return;
+      if (rightLimit) return;
 
       rover.x += 1;
       return { x: rover.x };
 
     case "S":
-      if (rover.y === 0) return;
+      if (bottomLimit) return;
 
       rover.y -= 1;
       return { y: rover.y };
 
     case "W":
-      if (rover.x === 0) return;
+      if (leftLimit) return;
 
       rover.x -= 1;
       return { x: rover.x };

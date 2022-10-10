@@ -1,9 +1,10 @@
 export function popUp(msg = "", isError = false) {
   const duration = isError ? 6500 : 4500;
   const borderColor = isError ? "var(--error)" : "transparent";
+  const targetDiv = document.createElement("div");
 
-  var el = document.createElement("div");
-  el.setAttribute(
+  targetDiv.innerHTML = msg;
+  targetDiv.setAttribute(
     "style",
     "position:fixed; opacity:0 ;" +
       "transition: var(--fast);" +
@@ -12,7 +13,6 @@ export function popUp(msg = "", isError = false) {
       "padding: 15px 30px;" +
       "font-weight: 500;" +
       "backdrop-filter: blur(28px);  " +
-      "box-shadow: var(--basicShadow); " +
       "border-radius: 15px; " +
       "margin: 20px; border: none;  " +
       "background-color: var(--contrast);" +
@@ -23,23 +23,21 @@ export function popUp(msg = "", isError = false) {
       borderColor +
       ";"
   );
-  el.innerHTML = msg;
+  document.body.appendChild(targetDiv);
 
   setTimeout(function () {
-    el.style.top = "2%";
-    el.style.opacity = "1";
+    targetDiv.style.top = "2%";
+    targetDiv.style.opacity = "1";
   }, 100);
 
   setTimeout(function () {
-    el.style.opacity = "0";
-    el.style.top = "-15%";
+    targetDiv.style.opacity = "0";
+    targetDiv.style.top = "-15%";
   }, duration);
 
   setTimeout(function () {
-    el.parentNode.removeChild(el);
+    targetDiv.innerHTML = "";
   }, duration * 1.5);
-
-  document.body.appendChild(el);
 }
 
 export default popUp;
