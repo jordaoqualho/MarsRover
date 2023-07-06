@@ -1,4 +1,5 @@
 # Mars Rover
+> simple mars rover problem solved in react.js
 
 ![image](https://user-images.githubusercontent.com/50970557/194802350-9461241c-f5f3-402d-a8f3-536dc0e89c96.png)
 
@@ -17,6 +18,14 @@ git clone https://github.com/jordaoqualho/MarsRover.git
 3 - Use the `npm start` or `yarn start` command to start the project.
 
 <br/>
+
+## How it works
+
+The rover has a starting point (x,y) and a direction (N,S,E,W) property which describe the initial position and facing direction and its receives commands as a character array.
+- (M) Moves the rover forward.
+- (L,R) Turns the rover left/right.
+
+  <br/>
 
 ## Used Packages
 
